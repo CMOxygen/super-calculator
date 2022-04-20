@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_6">
+      <item>
+       <widget class="QLabel" name="funcLabel">
+        <property name="text">
+         <string>f(x) = </string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="userInputLine">
+        <property name="inputMethodHints">
+         <set>Qt::ImhPreferLatin</set>
+        </property>
+        <property name="inputMask">
+         <string/>
+        </property>
+        <property name="maxLength">
+         <number>30</number>
+        </property>
+        <property name="echoMode">
+         <enum>QLineEdit::Normal</enum>
+        </property>
+        <property name="placeholderText">
+         <string>Введите подынтегральную функцию</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <item>
+       <widget class="QLabel" name="limitsLabel1">
+        <property name="text">
+         <string>Пределы интегрирования от</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="bottomLimitEdit"/>
+      </item>
+      <item>
+       <widget class="QLabel" name="limitsLabel2">
+        <property name="text">
+         <string>до</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="topLimitEdit"/>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QComboBox" name="stepTypeBox">
+          <item>
+           <property name="text">
+            <string>Количество интервалов</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Шаг интегрирования</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="stepTypeLabel">
+          <property name="text">
+           <string>=</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="stepSizeEdit"/>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QLabel" name="integrationMethodLabel">
+          <property name="text">
+           <string>Метод интегрирования:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="integrationMethodBox">
+          <item>
+           <property name="text">
+            <string>Метод левых прямоугольников</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Метод средних прямоугольников</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Метод правых прямоугольников</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Метод трапеций</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Метод Симпсона</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QTableWidget" name="tableWidget">
+        <column>
+         <property name="text">
+          <string>i</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>xi</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>yi</string>
+         </property>
+        </column>
+       </widget>
+      </item>
+      <item>
+       <widget class="QTextBrowser" name="resultTextBrowser"/>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>478</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="solveButton">
+        <property name="text">
+         <string>Решить</string>
+        </property>
+        <property name="shortcut">
+         <string>Ctrl+Return</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>28</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
