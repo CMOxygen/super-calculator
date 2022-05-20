@@ -6,63 +6,33 @@ MethodSimpson::MethodSimpson(QObject *parent) : QObject(parent)
 {
 }
 
-void MethodSimpson::solve(QString func, double stepSize, double stepCount, double bottomLimit, double topLimit)
+QMap<double, double> MethodSimpson::solveSimpson(QString func, double stepSize, double stepCount, double bottomLimit, double topLimit)
 {
+    QMap<double, double> values;
 
-    qDebug() << func;
-    double x = bottomLimit;
-
-    double y;
-
-    for(int i = 0; i < stepCount; i++)
+    for (int i = 0; i <= stepCount; i++)
     {
-        qDebug() << i << x;
-
-        x+=stepSize;
+        values[bottomLimit] = MathService::parseFunc(func, bottomLimit);
+        bottomLimit += stepSize;
     }
-    MethodSimpson::countY(func, x);
-}
+    double evens = 0;
+    double odds = 0;
+    double beginValue;
+    double endValue;
 
-double MethodSimpson::countY(QString func, double x)
-{
-    double y = 0.0;
+    auto it = ++values.constBegin();
+    auto end = --values.constEnd();
+    int counter = 1;
 
-    QList<double> digits;
-    QList<QString> math;
-    QList<QString> variables;
+    beginValue = it.value();
+    endValue = end.value();
 
-    QString buff = "";
-
-    for(QChar c : func)
+    while (it != end)
     {
-        if(c.isDigit())
-        {
-            buff.append(c);
-        }
-        else if(c=='x')
-        {
-            variables.append(c);
-        }
-        else
-        {
-            if(buff.length()>0)
-            {
-                digits.append(buff.toDouble());
-            }
-            buff="";
-
-            if(c!='\n')
-            {
-                math.append(c);
-            }
-        }
+        counter % 2 == 0 && counter < stepCount - 1 ? evens += it.value() : odds += it.value();
+        counter++;
+        it++;
     }
-
-    qDebug() << "SIMPSON Y " << digits;
-    qDebug() << "SIMPSON Y " << variables;
-    qDebug() << "SIMPSON Y " << math;
-
-    qDebug() << QString("2+3");
-
-    return 0;
+    MathService::rslt = stepSize / 3 * (beginValue + 4 * odds + 2 * evens + endValue);
+    return values;
 }

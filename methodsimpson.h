@@ -1,9 +1,9 @@
 #ifndef METHODSIMPSON_H
 #define METHODSIMPSON_H
 
-#include <QObject>
+#include "mathservice.h"
 
-#include <QtScript/QScriptEngine>
+#include <QObject>
 
 class MethodSimpson : public QObject
 {
@@ -11,8 +11,7 @@ class MethodSimpson : public QObject
 public:
     explicit MethodSimpson(QObject *parent = nullptr);
 
-    static void solve(QString func, double stepSize, double stepCount, double bottomLimit, double topLimit);
-    static double countY(QString func, double x);
+    static QMap<double, double> solveSimpson(QString func, double stepSize, double stepCount, double bottomLimit, double topLimit);
 
 signals:
 

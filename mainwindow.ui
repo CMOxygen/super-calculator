@@ -32,6 +32,9 @@
         <property name="inputMask">
          <string/>
         </property>
+        <property name="text">
+         <string>x+3+x+5*2</string>
+        </property>
         <property name="maxLength">
          <number>30</number>
         </property>
@@ -55,7 +58,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="bottomLimitEdit"/>
+       <widget class="QLineEdit" name="bottomLimitEdit">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="limitsLabel2">
@@ -65,7 +72,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="topLimitEdit"/>
+       <widget class="QLineEdit" name="topLimitEdit">
+        <property name="text">
+         <string>1</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -95,7 +106,11 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="stepSizeEdit"/>
+         <widget class="QLineEdit" name="stepSizeEdit">
+          <property name="text">
+           <string>10</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -110,19 +125,12 @@
         </item>
         <item>
          <widget class="QComboBox" name="integrationMethodBox">
-          <item>
-           <property name="text">
-            <string>Метод левых прямоугольников</string>
-           </property>
-          </item>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
           <item>
            <property name="text">
             <string>Метод средних прямоугольников</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Метод правых прямоугольников</string>
            </property>
           </item>
           <item>

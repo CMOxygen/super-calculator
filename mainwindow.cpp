@@ -3,13 +3,14 @@
 
 #include <QDebug>
 #include <QTableWidget>
+#include <QMap>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->userInputLine->setValidator(new QRegExpValidator(QRegExp("[0-9xsincotgqrpe+-=/*()^]*"), ui->userInputLine));
+    ui->userInputLine->setValidator(new QRegExpValidator(QRegExp("[0-9x+-/*.]*"), ui->userInputLine));
     ui->bottomLimitEdit->setValidator(new QRegExpValidator(QRegExp("[0-9.]*")));
     ui->topLimitEdit->setValidator(new QRegExpValidator(QRegExp("[0-9.]*")));
     ui->stepSizeEdit->setValidator(new QRegExpValidator(QRegExp("[0-9.]*")));
@@ -27,110 +28,153 @@ void MainWindow::on_solveButton_clicked()
     QString func = ui->userInputLine->text() + '\n';
     double bottomLimit = ui->bottomLimitEdit->text().toDouble();
     double topLimit = ui->topLimitEdit->text().toDouble();
-    double stepSize = ui->stepSizeEdit->text().toDouble();
     double delta = topLimit - bottomLimit;
 
-    parseFunc(ui->userInputLine->text());
+    double stepSize;
+    double stepCount;
 
+    QMap<double, double> outputSimpson;
 
-    //    MethodSimpson::solve(func, stepSize, (topLimit - bottomLimit)/stepSize, bottomLimit, topLimit);
-
-    //    if (ui->stepTypeBox->currentIndex() == 0)
-    //    {
-    //        for (int i = 0; i <= stepSize ; i++)
-    //        {
-    //            ui->tableWidget->setRowCount(ui->tableWidget->rowCount() + 1);
-    //            ui->tableWidget->setItem(i, 0, new QTableWidgetItem(QString::number(i)));
-    //            ui->tableWidget->setItem(i, 1, new QTableWidgetItem(QString::number((i) * (delta / stepSize))));
-    //            ui->tableWidget->setItem(i, 2, new QTableWidgetItem("yi"));
-    //        }
-    //    }
-    //    else
-    //    {
-    //        int counter = 0;
-
-    //        while (bottomLimit <= topLimit)
-    //        {
-    //            ui->tableWidget->setRowCount(ui->tableWidget->rowCount() + 1);
-    //            ui->tableWidget->setItem(counter, 0, new QTableWidgetItem(QString::number(counter)));
-    //            ui->tableWidget->setItem(counter, 1, new QTableWidgetItem(QString::number(bottomLimit)));
-    //            ui->tableWidget->setItem(counter, 2, new QTableWidgetItem("yi"));
-
-    //            counter++;
-    //            bottomLimit+=stepSize;
-    //        }
-    //    }
-    //    ui->resultTextBrowser->setText("Решение с помощью " + ui->integrationMethodBox->currentText() + "...");
-}
-
-void MainWindow::parseFunc(QString input)
-{
-    QList<QChar> lettersList = {'s', 'i', 'n', 'c', 'o', 't', 'g', 'q', 'r'};
-    QList<QString> funcExpressions;
-    size_t digitCounter = 0;
-    QString buffDigits = "";
-    QString buffExpressions = "";
-
-    QMap<int, int> bracketPairIndexes;
-
-    int x = 1;
-
-//    funcExpressions.append("b");
-
-    for (QChar c : input)
+    if (ui->stepTypeBox->currentIndex() == 0)
     {
-        if(c.isDigit() || c == '.')
-        {
-            buffDigits.append(c);
-        }
-        else if (c == 'x')
-        {
-            funcExpressions.append(c);
-        }
-        else if(lettersList.contains(c))
-        {
-            buffExpressions.append(c);
-        }
-        else
-        {
-            if(buffDigits.length() > 0)
-            {
-                funcExpressions.append(buffDigits);
-            }
-            if(buffExpressions.length() > 0)
-            {
-                funcExpressions.append(buffExpressions);
-            }
-            buffDigits = "";
-            buffExpressions = "";
-
-            if(c != '\n')
-            {
-                funcExpressions.append(c);
-            }
-        }
-    }
-    qDebug() << "FUNCT EXPRESSIONS = " << funcExpressions;
-
-    for (int i = 0; i < funcExpressions.length(); i++)
-    {
-        if (funcExpressions[i] == "(" && !lettersList.contains(funcExpressions[i - 1][0]))
-        {
-            qDebug() << funcExpressions[i] << funcExpressions[i - 1];
-
-//            bracketPairIndexes[i] = 0;
-
-            for (int j = i; j < funcExpressions.length(); j++)
-            {
-                if (funcExpressions[j] == ")")
-                {
-                    bracketPairIndexes[i] = j;
-                }
-            }
-        }
+        stepCount = ui->stepSizeEdit->text().toDouble();
+        stepSize = delta / stepCount;
     }
 
+    if (ui->stepTypeBox->currentIndex() == 1)
+    {
+        stepSize = ui->stepSizeEdit->text().toDouble();
+        stepCount = delta / stepSize;
+    }
 
-    qDebug() << "BARCKET PAIR INDEXES " << bracketPairIndexes;
+    switch (ui->integrationMethodBox->currentIndex())
+    {
+    case 0:
+    {
+        outputSimpson = MethodSquares::solveSquares(func, stepSize, stepCount, bottomLimit, topLimit);
+        ui->resultTextBrowser->setText("Решение с помощью " + ui->integrationMethodBox->currentText() + "...");
 
+        int counter = 0;
+
+        auto it = outputSimpson.constBegin();
+        auto end = outputSimpson.constEnd();
+
+        QStringList formula{"I = \n", QString::number(stepSize), "*("};
+
+        while (it != end)
+        {
+            ui->tableWidget->setRowCount(ui->tableWidget->rowCount() + 1);
+            ui->tableWidget->setItem(counter, 0, new QTableWidgetItem(QString::number(counter)));
+            ui->tableWidget->setItem(counter, 1, new QTableWidgetItem(QString::number(it.key())));
+            ui->tableWidget->setItem(counter, 2, new QTableWidgetItem(QString::number(it.value())));
+
+            if (counter < stepCount)
+            {
+                formula.append(QString::number(it.value()) + "+");
+            }
+            ++it;
+            counter++;
+        }
+        formula[formula.length() - 1].replace("+", "");
+        formula.append(") = ");
+        formula.append(QString::number(MathService::rslt));
+
+        ui->resultTextBrowser->setText(formula.join(""));
+        outputSimpson = MethodSquares::solveSquares(func, stepSize, stepCount, bottomLimit, topLimit);
+        break;
+    }
+    case 1:
+    {
+        outputSimpson = MethodTrapezoid::solveTrapeziod(func, stepSize, stepCount, bottomLimit, topLimit);
+        ui->resultTextBrowser->setText("Решение с помощью " + ui->integrationMethodBox->currentText() + "...");
+
+        int counter = 0;
+
+        auto it = outputSimpson.constBegin();
+        auto end = outputSimpson.constEnd();
+
+        double firstValue = it.value();
+        double lastValue;
+
+        QStringList formula{"I = \n", QString::number(stepSize), "*("};
+
+        while (it != end)
+        {
+            ui->tableWidget->setRowCount(ui->tableWidget->rowCount() + 1);
+            ui->tableWidget->setItem(counter, 0, new QTableWidgetItem(QString::number(counter)));
+            ui->tableWidget->setItem(counter, 1, new QTableWidgetItem(QString::number(it.key())));
+            ui->tableWidget->setItem(counter, 2, new QTableWidgetItem(QString::number(it.value())));
+            lastValue = it.value();
+
+            if (counter > 0 && counter < stepCount
+                    )
+            {
+                formula.append(QString::number(it.value()) + "+");
+            }
+
+            counter++;
+            ++it;
+        }
+        formula[formula.length() - 1].replace("+", "");
+        formula.append(")+\n+(" + QString::number(firstValue) + "+" + QString::number(lastValue) + ")/2");
+        formula.append(" = ");
+        formula.append(QString::number(MathService::rslt));
+
+        ui->resultTextBrowser->setText(formula.join(""));
+        break;
+    }
+
+    case 2:
+    {
+        outputSimpson =  MethodSimpson::solveSimpson(func, stepSize, stepCount, bottomLimit, topLimit);
+        ui->resultTextBrowser->setText("Решение с помощью " + ui->integrationMethodBox->currentText() + "...");
+
+        int counter = 0;
+
+        double lastValue;
+
+        auto it = outputSimpson.constBegin();
+        auto end = outputSimpson.constEnd();
+
+        QStringList formula{"I = \n", QString::number(stepSize), "/3(" , QString::number(it.value())};
+
+        QStringList odds{"+4("};
+        QStringList evens{"\n+2("};
+
+        while (it != end)
+        {
+            ui->tableWidget->setRowCount(ui->tableWidget->rowCount() + 1);
+            ui->tableWidget->setItem(counter, 0, new QTableWidgetItem(QString::number(counter)));
+            ui->tableWidget->setItem(counter, 1, new QTableWidgetItem(QString::number(it.key())));
+            ui->tableWidget->setItem(counter, 2, new QTableWidgetItem(QString::number(it.value())));
+
+            if (counter > 0 && counter < stepCount)
+            {
+                counter % 2 == 0 ? evens.append(QString::number(it.value()) + "+") : odds.append(QString::number(it.value()) + "+");
+            }
+            if (counter == stepCount)
+            {
+                lastValue = it.value();
+            }
+            counter++;
+            ++it;
+        }
+
+        evens[evens.length() - 1].replace("+", "");
+        odds[odds.length() - 1].replace("+", "");
+        odds.append(")+");
+        evens.append(")");
+
+        formula.append(odds);
+        formula.append(evens);
+
+        formula.append("+");
+        formula.append(QString::number(lastValue));
+        formula.append(") = ");
+        formula.append(QString::number(MathService::rslt));
+
+        ui->resultTextBrowser->setText(formula.join(""));
+        break;
+    }
+    }
 }

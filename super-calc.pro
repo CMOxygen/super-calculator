@@ -13,11 +13,17 @@ CONFIG += c++11
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    methodsimpson.cpp
+    mathservice.cpp \
+    methodsimpson.cpp \
+    methodsquares.cpp \
+    methodtrapezoid.cpp
 
 HEADERS += \
     mainwindow.h \
-    methodsimpson.h
+    mathservice.h \
+    methodsimpson.h \
+    methodsquares.h \
+    methodtrapezoid.h
 
 FORMS += \
     mainwindow.ui

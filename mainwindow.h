@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include "methodsimpson.h"
+#include "methodtrapezoid.h"
+#include "methodsquares.h"
 
 #include <QMainWindow>
 
@@ -19,10 +21,6 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
-    int testFunc(){return 3;}
-
-    void parseFunc(QString input);
 
 private slots:
     void on_solveButton_clicked();
